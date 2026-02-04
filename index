@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>युद्ध अभ्यास IAS Academy - Gupteshwar Sir</title>
+
+    <!-- External Assets -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* UI Design: Gupteshwar Sir - Exam Warriors Academy */
+        :root {
+            --primary: #4A90E2;
+            --secondary: #7B68EE;
+            --accent: #FFD700;
+            --dark-bg: #0a0e27;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.7);
+            --gradient: linear-gradient(135deg, #4A90E2 0%, #7B68EE 100%);
+            --warrior-gradient: linear-gradient(135deg, #FF6B6B 0%, #FFD700 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #0f172a;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Splash Screen */
+        .splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .splash.hidden {
+            display: none;
+        }
+
+        /* Splash Motivation Style */
+        .splash-quote-container {
+            padding: 30px;
+            text-align: center;
+            max-width: 90%;
+            margin-bottom: 20px;
+            animation: fadeInScale 1s ease-out;
+        }
+
+        #splash-quote {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.5;
+            margin: 15px 0;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Progress Bar Styles */
+        .progress-wrap {
+            width: 85%;
+            max-width: 350px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .progress-bg {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--warrior-gradient);
+            box-shadow: 0 0 15px var(--accent);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        #progress-text {
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--gradient);
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .app-header p.subtitle {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 20px 15px 120px;
+        }
+
+        .screen#reels-screen {
+            padding: 0;
+            /* Full screen for reels */
+            padding-bottom: 80px;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Subjects Grid */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .subject-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .subject-card:active {
+            transform: scale(0.95);
+        }
+
+        .subject-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+            color: var(--accent);
+        }
+
+        .subject-name {
+            font-size: 15px;
+            font-weight: 600;
+            display: block;
+        }
+
+        /* Videos List */
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .video-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            cursor: pointer;
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* Play icon removed as requested */
+        .play-icon-overlay {
+            display: none;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-title {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 8px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .btn-watch {
+            background: #ff0000;
+            /* YouTube Red */
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .btn-pdf {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-share {
+            background: #2ed573;
+            color: white;
+        }
+
+        /* Instagram Style Full Screen Reels */
+        .reels-container {
+            height: calc(100vh - 80px);
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            background: #000;
+        }
+
+        .reel-item {
+            height: calc(100vh - 80px);
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .reel-video-wrapper {
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        .reel-video-wrapper iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reel-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            pointer-events: none;
+        }
+
+        .reel-overlay * {
+            pointer-events: auto;
+        }
+
+        .reel-title {
+            font-size: 15px;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        /* Bottom Navigation - Centered Home with Fire Animation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(10, 14, 39, 0.98);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0 25px;
+            z-index: 1000;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .nav-item {
+            color: var(--text-dim);
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        /* Multicolor 3D Home Button - Locked Circle */
+        .nav-home {
+            position: relative;
+            top: -30px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FFD700 50%, #7B68EE 100%);
+            width: 70px;
+            height: 70px;
+            aspect-ratio: 1/1;
+            /* Ensure 1:1 ratio */
+            flex: none;
+            /* Prevent squeezing */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.5), inset 0 -4px 10px rgba(0, 0, 0, 0.3), inset 0 4px 10px rgba(255, 255, 255, 0.4);
+            border: 4px solid #0f172a;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: multicolor-glow 3s infinite;
+        }
+
+        .nav-home i {
+            font-size: 30px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        @keyframes multicolor-glow {
+            0% {
+                transform: scale(1) translateY(0);
+                box-shadow: 0 10px 20px rgba(255, 107, 107, 0.6);
+            }
+
+            33% {
+                transform: scale(1.1) translateY(-5px);
+                box-shadow: 0 15px 30px rgba(255, 215, 0, 0.6);
+            }
+
+            66% {
+                transform: scale(1) translateY(0);
+                box-shadow: 0 10px 20px rgba(123, 104, 238, 0.6);
+            }
+
+            100% {
+                transform: scale(1) translateY(0);
+                box-shadow: 0 10px 20px rgba(255, 107, 107, 0.6);
+            }
+        }
+
+        .nav-home:active {
+            transform: scale(0.9) translateY(5px);
+        }
+
+        /* Back Button */
+        .back-btn-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            background: var(--card-bg);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Quote Bar */
+        .quote-bar {
+            position: fixed;
+            bottom: 85px;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--accent);
+            z-index: 90;
+            text-align: center;
+        }
+
+        #quote-text {
+            font-size: 12px;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 30px;
+            padding: 30px;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Splash / Loader -->
+        <div id="splash" class="splash">
+            <div id="splash-quote-container" class="splash-quote-container">
+                <i class="fas fa-quote-left" style="opacity:0.3; font-size:40px"></i>
+                <h2 id="splash-quote">लक्ष्य के पीछे मत भागो, उसे हासिल करने के लिए खुद को तैयार करो।</h2>
+                <i class="fas fa-quote-right" style="opacity:0.3; font-size:40px; float:right"></i>
+            </div>
+
+            <div class="progress-wrap">
+                <div class="progress-bg">
+                    <div id="progress-bar" class="progress-fill"></div>
+                </div>
+                <p id="progress-text">रणनीति तैयार हो रही है... 0%</p>
+            </div>
+            <p style="color:var(--accent); font-weight:600; letter-spacing:1px">YUDHH ABHYAS IAS ACADEMY</p>
+        </div>
+
+        <!-- Header -->
+        <header class="app-header">
+            <h1>युद्ध अभ्यास IAS Academy</h1>
+            <p class="subtitle">Gupteshwar Sir</p>
+        </header>
+
+        <!-- Home Screen -->
+        <main id="home-screen" class="screen active">
+            <div id="subjects-grid" class="subjects-grid">
+                <!-- Loaded via JS -->
+            </div>
+        </main>
+
+        <!-- Subject Videos Screen -->
+        <main id="subject-screen" class="screen">
+            <div class="back-btn-container">
+                <button class="back-btn" onclick="showScreen('home')">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 id="display-subject-name">Subject</h2>
+            </div>
+            <div id="videos-list">
+                <!-- Loaded via JS -->
+            </div>
+        </main>
+
+        <!-- Reels / Motivation Screen -->
+        <main id="reels-screen" class="screen">
+            <div id="reels-container" class="reels-container">
+                <!-- Loaded via JS (Instagram Style) -->
+            </div>
+        </main>
+
+        <!-- Quote Bar (Persistent) -->
+        <div class="quote-bar">
+            <span id="quote-text">हार तभी होती है जब हम छोड़ देते हैं। संघर्ष जारी रखो! 🔥</span>
+        </div>
+
+        <!-- Navigation - Centered Home with Fire -->
+        <nav class="bottom-nav">
+            <div class="nav-item" onclick="showScreen('reels')">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <div class="nav-item nav-home" onclick="handleHomeClick()">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="showConnect()">
+                <i class="fas fa-link"></i>
+            </div>
+        </nav>
+
+    </div>
+
+    <!-- Social Connect Modal -->
+    <div id="connect-modal" class="modal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <h2>Connect</h2>
+                <button onclick="closeConnect()"
+                    style="background:none; border:none; color:white; font-size:24px">&times;</button>
+            </div>
+            <div class="social-grid">
+                <a href="https://gupteshsir.classx.co.in/" target="_blank" class="social-box">
+                    <i class="fas fa-globe" style="font-size:24px"></i><br>Website
+                </a>
+                <a href="https://t.me/GupteshSir" target="_blank" class="social-box">
+                    <i class="fab fa-telegram" style="font-size:24px"></i><br>Telegram
+                </a>
+                <a href="https://wa.me/917987498866" target="_blank" class="social-box">
+                    <i class="fab fa-whatsapp" style="font-size:24px"></i><br>WhatsApp
+                </a>
+                <a href="https://instagram.com/gk.sir" target="_blank" class="social-box">
+                    <i class="fab fa-instagram" style="font-size:24px"></i><br>Insta
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // APP LOGIC: युद्ध अभ्यास IAS Academy (Always Fresh Fetch + Motivation Loader)
+
+        const CONFIG = {
+            CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTowCJZhBEo1qnB0eNsLeTIhgYZqRUmJHppOJ2kFsymr1m6VfqmwvodlcLSiGCmALvXmVGG4q75Kg2o/pub?gid=0&single=true&output=csv',
+            CACHE_KEY: 'warrior_sheet_data_v5',
+            MIN_SPLASH_TIME: 2500 // 2.5 seconds minimum to read quote
+        };
+
+        const state = {
+            subjects: {},
+            reels: [],
+            currentScreen: 'home'
+        };
+
+        const quotes = [
+            "जीतने का असली मज़ा तब आता है जब सब आपके हारने का इंतज़ार कर रहे हों! 🔥",
+            "भीड़ का हिस्सा नहीं, भीड़ का कारण बनो। संघर्ष ही सफलता की चाबी है। 💪",
+            "हर छोटा बदलाव बड़ी सफलता का हिस्सा होता है। आप योद्धा हैं! ⚔️",
+            "किस्मत के भरोसे मत बैठो, कड़ी मेहनत के बल पर अपना मुकाम हासिल करो। ⏰",
+            "मंजिल उन्हें ही मिलती है जिनके सपनों में जान होती है, पंखों से कुछ नहीं होता हौसलों से उड़ान होती है! 🎯",
+            "सफलता की सबसे अच्छी बात यह है कि वह मेहनत करने वालों पर फिदा हो जाती है। 🔥",
+            "आपका वर्तमान आपका भविष्य तय नहीं करता, आपकी मेहनत करती है। 💪"
+        ];
+
+        const splashQuotes = [
+            "योद्धा रणभूमि में अपनी जीत पहले ही तय कर लेते हैं।",
+            "आज का अध्ययन ही कल का गौरव बनेगा। तैयारी करते रहें!",
+            "सफलता के शिखर तक पहुँचने के लिए संघर्ष आवश्यक है।",
+            "मंजिल दूर हो सकती है, लेकिन आपके इरादे नहीं।",
+            "युद्ध अभ्यास ही आपको असली परीक्षा के लिए तैयार करता है।"
+        ];
+
+        function showScreen(name) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`${name}-screen`).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            if (name === 'home') document.querySelector('.nav-home').classList.add('active');
+            else {
+                const activeNav = document.querySelector(`.nav-item[onclick*="${name}"]`);
+                if (activeNav) activeNav.classList.add('active');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // Fetch Everything on Load
+        async function loadAppData() {
+            // 1. Instantly show a random splash quote
+            const sq = splashQuotes[Math.floor(Math.random() * splashQuotes.length)];
+            document.getElementById('splash-quote').innerText = sq;
+
+            const startTime = Date.now();
+
+            try {
+                updateProgress(10, "रणनीति तैयार हो रही है...");
+                const response = await fetch(CONFIG.CSV_URL);
+                updateProgress(50, "कमांड सेंटर से डेटा आ रहा है...");
+                const csvText = await response.text();
+                const parsedData = parseCSV(csvText);
+                updateProgress(90, "अंतिम तैयारी...");
+
+                // Smart Logic: Don't hide splash before MIN_SPLASH_TIME
+                const endTime = Date.now();
+                const delay = Math.max(0, CONFIG.MIN_SPLASH_TIME - (endTime - startTime));
+
+                setTimeout(() => {
+                    updateProgress(100, "युद्ध अभ्यास के लिए तैयार!");
+                    processSheetData(parsedData);
+                    // Save for emergency backup only
+                    localStorage.setItem(CONFIG.CACHE_KEY, JSON.stringify(parsedData));
+                }, delay);
+
+            } catch (e) {
+                console.error("Fetch major failure", e);
+                const backup = localStorage.getItem(CONFIG.CACHE_KEY);
+                if (backup) processSheetData(JSON.parse(backup));
+                else alert("इंटरनेट कनेक्शन चेक करें।");
+            }
+        }
+
+        function updateProgress(percent, text) {
+            const bar = document.getElementById('progress-bar');
+            const txt = document.getElementById('progress-text');
+            if (bar) bar.style.width = percent + '%';
+            if (txt) txt.innerText = text + " (" + percent + "%)";
+        }
+
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/);
+            const result = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const row = [];
+                let cur = "";
+                let inQuotes = false;
+                for (let char of lines[i]) {
+                    if (char === '"') inQuotes = !inQuotes;
+                    else if (char === ',' && !inQuotes) {
+                        row.push(cur.trim());
+                        cur = "";
+                    } else cur += char;
+                }
+                row.push(cur.trim());
+                result.push(row);
+            }
+            return result;
+        }
+
+        function processSheetData(rows) {
+            state.subjects = {};
+            state.reels = [];
+            rows.forEach(row => {
+                const [title, link, type, pdf] = row;
+                const videoId = getYoutubeId(link);
+                const metadata = title.match(/#([^\s]+?)\s*_L(\d+)/i);
+                const video = {
+                    id: videoId || '',
+                    title: title || "Class",
+                    thumb: videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '',
+                    pdf: (pdf && pdf.toLowerCase() !== 'empty') ? (pdf.startsWith('http') ? pdf : 'https://' + pdf) : null,
+                    lecture: metadata ? parseInt(metadata[2]) : 0,
+                    subject: metadata ? metadata[1].toUpperCase() : null
+                };
+                if ((type && type.toLowerCase().includes('short')) || title.includes('#short') || title.includes('#motivation')) state.reels.push(video);
+                else if (video.subject) {
+                    if (!state.subjects[video.subject]) state.subjects[video.subject] = [];
+                    state.subjects[video.subject].push(video);
+                }
+            });
+            renderHome();
+            renderReels();
+            document.getElementById('splash').classList.add('hidden');
+        }
+
+        function getYoutubeId(link) {
+            if (!link) return null;
+            const match = link.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function renderHome() {
+            const grid = document.getElementById('subjects-grid');
+            grid.innerHTML = "";
+            Object.keys(state.subjects).forEach(sub => {
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.innerHTML = `<i class="fas fa-book-open subject-icon"></i><span class="subject-name">${sub}</span><small style="opacity:0.6">${state.subjects[sub].length} Sessions</small>`;
+                card.onclick = () => openSubject(sub);
+                grid.appendChild(card);
+            });
+        }
+
+        function openSubject(name) {
+            const list = document.getElementById('videos-list');
+            document.getElementById('display-subject-name').innerText = name;
+            const videos = state.subjects[name].sort((a, b) => a.lecture - b.lecture);
+            list.innerHTML = videos.map(v => `
+                <div class="video-card">
+                    <div class="video-thumb" style="background-image:url('${v.thumb}')" onclick="watchSearch('${v.title.replace(/'/g, "\\'")}')"></div>
+                    <div class="video-info">
+                        <div class="video-title">Class ${v.lecture}: ${v.title}</div>
+                        <div class="btn-row">
+                            <button class="btn btn-watch" onclick="watchSearch('${v.title.replace(/'/g, "\\'")}')"><i class="fas fa-play"></i> Watch Now</button>
+                            ${v.pdf ? `<button class="btn btn-pdf" onclick="window.open('${v.pdf}','_blank')"><i class="fas fa-file-pdf"></i> Open PDF</button>` : ''}
+                            <button class="btn btn-share" onclick="shareToWA('${v.id}', '${v.title.replace(/'/g, "\\'")}')"><i class="fab fa-whatsapp"></i> Share</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+            showScreen('subject');
+        }
+
+        function renderReels() {
+            const container = document.getElementById('reels-container');
+            if (state.reels.length === 0) {
+                container.innerHTML = "<div style='text-align:center; padding:100px; color:#999'>No Motivation Shorts</div>";
+                return;
+            }
+
+            // Logic: [Last Clone] + [Actual Items] + [First Clone]
+            const first = state.reels[0];
+            const last = state.reels[state.reels.length - 1];
+            const loopItems = [last, ...state.reels, first];
+
+            container.innerHTML = loopItems.map((r, i) => `
+                <div class="reel-item" data-loop-index="${i}" data-id="${r.id}">
+                    <div class="reel-video-wrapper">
+                        <iframe class="reel-iframe" width="100%" height="100%" src="https://www.youtube.com/embed/${r.id}?enablejsapi=1&rel=0&modestbranding=1&controls=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                    <div class="reel-overlay">
+                        <div class="reel-title">${r.title}</div>
+                        <div class="btn-row">
+                            <button class="btn btn-share" onclick="shareToWA('${r.id}', '${r.title.replace(/'/g, "\\'")}')"><i class="fab fa-whatsapp"></i> Share Status</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+
+            // Initial Position: Skip the first clone
+            setTimeout(() => {
+                const h = container.offsetHeight;
+                container.scrollTop = h;
+            }, 100);
+
+            // Infinite Loop Detection
+            container.onscroll = () => {
+                const h = container.offsetHeight;
+                const total = state.reels.length;
+                if (container.scrollTop <= 0) {
+                    container.scrollTop = total * h; // Jump to last real item
+                } else if (container.scrollTop >= (total + 1) * h - 5) {
+                    container.scrollTop = h; // Jump to first real item
+                }
+            };
+
+            initReelsAutoPlay();
+        }
+
+        function initReelsAutoPlay() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const iframe = entry.target.querySelector('iframe');
+                    if (!iframe) return;
+                    if (entry.isIntersecting) {
+                        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                    } else {
+                        iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    }
+                });
+            }, { root: document.getElementById('reels-container'), threshold: 0.8 });
+            document.querySelectorAll('.reel-item').forEach(reel => observer.observe(reel));
+        }
+
+        function watchSearch(title) {
+            if (!title) return;
+            window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(title)}`, '_blank');
+        }
+
+        function shareToWA(id, title) {
+            if (!id) return;
+            const link = `https://youtu.be/${id}`;
+            const text = `🎯 *${title}*\n\n🔗 ${link}`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        window.onload = () => {
+            loadAppData();
+            const qEl = document.getElementById('quote-text');
+            let idx = 0;
+            setInterval(() => {
+                idx = (idx + 1) % quotes.length;
+                if (qEl) qEl.innerText = quotes[idx];
+            }, 5000);
+        };
+
+        function showConnect() { document.getElementById('connect-modal').classList.add('active'); }
+        function closeConnect() { document.getElementById('connect-modal').classList.remove('active'); }
+        function handleHomeClick() { showScreen('home'); }
+    </script>
+</body>
+
+</html>
